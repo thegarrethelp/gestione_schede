@@ -1,0 +1,43 @@
+name: Sync Abbonamenti Scheda
+
+on:
+  schedule:
+    # Ogni 10 minuti
+    - cron: '*/10 * * * *'
+  
+  # Permette esecuzione manuale
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install pandas requests
+      
+      - name: Scarica CSV Abbonamenti
+        run: python scripts/download_abbonamenti.py
+        env:
+          # Aggiungi qui le variabili d'ambiente necessarie per il download
+          # ES: WELLNESS_API_KEY: ${{ secrets.WELLNESS_API_KEY }}
+          pass
+      
+      - name: Scarica CSV Brevo
+        run: python scripts/download_csv.py
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+      
+      - name: Aggiungi utenti Scheda alla lista Brevo
+        run: python scripts/aggiungi_a_lista_scheda.py
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
