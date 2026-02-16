@@ -1,21 +1,26 @@
 import pandas as pd
 import requests
+import os
 
 # ============================================================
 # CONFIGURAZIONE BREVO
 # ============================================================
-BREVO_API_KEY = "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"
-LISTA_NOME = "Scheda_Personalizzata"  # Nome della lista dove aggiungere i contatti
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
+LISTA_NOME = "Scheda_Personalizzata"
 
-# ============================================================
-# PERCORSI FILE (modifica se necessario)
-# ============================================================
-FILE_ABBONAMENTI = "Lista_Abbonamenti_Totale.csv"
-FILE_BREVO = "Brevo.csv"
+if not BREVO_API_KEY:
+    print("❌ Errore: BREVO_API_KEY non trovata nelle variabili d'ambiente")
+    exit(1)
+
+# Percorsi file (relativi alla cartella scripts)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+FILE_ABBONAMENTI = os.path.join(SCRIPT_DIR, "Lista_Abbonamenti_Totale.csv")
+FILE_BREVO = os.path.join(SCRIPT_DIR, "Brevo.csv")
 
 HEADERS = {
     "api-key": BREVO_API_KEY,
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "accept": "application/json"
 }
 
 
@@ -41,7 +46,7 @@ def create_list(list_name):
     """Crea una nuova lista in Brevo"""
     data = {
         "name": list_name,
-        "folderId": 1  # Folder di default
+        "folderId": 1
     }
     response = requests.post("https://api.brevo.com/v3/contacts/lists", headers=HEADERS, json=data)
     
@@ -111,8 +116,16 @@ def add_contact_to_list(email, list_id, nome="", cognome=""):
 
 def main():
     print("=" * 60)
-    print("AGGIUNGI UTENTI 'SCHEDA_PERSONALIZZATA' ALLA LISTA BREVO")
+    print("AGGIUNGI UTENTI 'SCHEDA' ALLA LISTA BREVO")
     print("=" * 60)
+    
+    # Verifica che i file esistano
+    if not os.path.exists(FILE_ABBONAMENTI):
+        print(f"❌ File non trovato: {FILE_ABBONAMENTI}")
+        return
+    if not os.path.exists(FILE_BREVO):
+        print(f"❌ File non trovato: {FILE_BREVO}")
+        return
     
     # Trova o crea la lista
     print(f"\n🔍 Cerco la lista '{LISTA_NOME}'...")
@@ -181,7 +194,6 @@ def main():
     print("\n" + "=" * 60)
     print(f"COMPLETATO - Aggiunti: {aggiunti} | Saltati: {saltati} | Errori: {errori}")
     print("=" * 60)
-    print(f"\n💡 Ora vai su Brevo e configura il flow sulla lista '{LISTA_NOME}'!")
 
 
 if __name__ == "__main__":

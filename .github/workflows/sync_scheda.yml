@@ -20,19 +20,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
+      
       - name: Install dependencies
         run: pip install pandas requests beautifulsoup4 gspread oauth2client
-        
+
       - name: Setup Google credentials
         run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > scripts/credentials.json
-        
-      - name: Debug - Verifica file
-        run: |
-          echo "=== Contenuto cartella scripts ==="
-          ls -la scripts/
-          echo "=== Verifica credentials.json ==="
-          cat scripts/credentials.json | head -5
       
       - name: Scarica CSV Abbonamenti
         run: python scripts/download_abbonamenti.py
@@ -42,3 +35,5 @@ jobs:
       
       - name: Aggiungi utenti Scheda alla lista Brevo
         run: python scripts/aggiungi_a_lista_scheda.py
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
