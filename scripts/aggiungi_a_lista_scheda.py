@@ -17,6 +17,10 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 FILE_ABBONAMENTI = os.path.join(SCRIPT_DIR, "Lista_Abbonamenti_Totale.csv")
 FILE_BREVO = os.path.join(SCRIPT_DIR, "Brevo.csv")
 
+print(f"📁 Cartella script: {SCRIPT_DIR}")
+print(f"📄 File abbonamenti: {FILE_ABBONAMENTI}")
+print(f"📄 File Brevo: {FILE_BREVO}")
+
 HEADERS = {
     "api-key": BREVO_API_KEY,
     "Content-Type": "application/json",
