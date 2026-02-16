@@ -31,7 +31,7 @@ jobs:
         run: python scripts/download_abbonamenti.py
       
       - name: Scarica CSV Brevo
-        run: python scripts/download_csv.py
+        run: python scripts/download_utenti.py
         
       - name: Debug - Contenuto cartella scripts
         run: |
