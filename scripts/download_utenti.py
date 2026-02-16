@@ -78,22 +78,33 @@ def main():
 
         json_data = response.json()
         
-        # Estrazione dati
-        data_list = json_data.get('data') or json_data.get('items') or json_data
+        print(f"Tipo json_data: {type(json_data)}")
+        print(f"Chiavi json_data: {json_data.keys() if isinstance(json_data, dict) else 'Non è un dict'}")
+        
+        # Prova diverse strutture possibili
+        if isinstance(json_data, dict):
+            if 'result' in json_data:
+                data_list = json_data['result']
+            elif 'data' in json_data:
+                data_list = json_data['data']
+            elif 'items' in json_data:
+                data_list = json_data['items']
+            elif 'Result' in json_data:
+                data_list = json_data['Result']
+            else:
+                print(f"Chiavi disponibili: {list(json_data.keys())}")
+                # Stampa un campione dei valori
+                for key in list(json_data.keys())[:5]:
+                    val = json_data[key]
+                    print(f"  {key}: {type(val)} - {str(val)[:100] if val else 'None'}")
+                data_list = None
+        else:
+            data_list = json_data
         
         print(f"Tipo data_list: {type(data_list)}")
-        print(f"Numero elementi: {len(data_list) if isinstance(data_list, list) else 'N/A'}")
-        
-        if data_list and isinstance(data_list, list) and len(data_list) > 0:
+        if isinstance(data_list, list) and len(data_list) > 0:
+            print(f"Numero elementi: {len(data_list)}")
             print(f"Tipo primo elemento: {type(data_list[0])}")
-            print(f"Chiavi primo elemento: {data_list[0].keys() if isinstance(data_list[0], dict) else 'Non è un dict'}")
-            
-            # Se il primo elemento è un dict, stampa le chiavi di Anagrafica
-            if isinstance(data_list[0], dict) and 'Anagrafica' in data_list[0]:
-                anagrafica = data_list[0]['Anagrafica']
-                print(f"Tipo Anagrafica: {type(anagrafica)}")
-                if isinstance(anagrafica, dict):
-                    print(f"Chiavi Anagrafica: {anagrafica.keys()}")
         
         if data_list:
             # Estrai i campi necessari dalla struttura annidata
