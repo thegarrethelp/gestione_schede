@@ -81,6 +81,20 @@ def main():
         # Estrazione dati
         data_list = json_data.get('data') or json_data.get('items') or json_data
         
+        print(f"Tipo data_list: {type(data_list)}")
+        print(f"Numero elementi: {len(data_list) if isinstance(data_list, list) else 'N/A'}")
+        
+        if data_list and isinstance(data_list, list) and len(data_list) > 0:
+            print(f"Tipo primo elemento: {type(data_list[0])}")
+            print(f"Chiavi primo elemento: {data_list[0].keys() if isinstance(data_list[0], dict) else 'Non è un dict'}")
+            
+            # Se il primo elemento è un dict, stampa le chiavi di Anagrafica
+            if isinstance(data_list[0], dict) and 'Anagrafica' in data_list[0]:
+                anagrafica = data_list[0]['Anagrafica']
+                print(f"Tipo Anagrafica: {type(anagrafica)}")
+                if isinstance(anagrafica, dict):
+                    print(f"Chiavi Anagrafica: {anagrafica.keys()}")
+        
         if data_list:
             # Estrai i campi necessari dalla struttura annidata
             utenti_estratti = []
