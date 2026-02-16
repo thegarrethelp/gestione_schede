@@ -10,7 +10,7 @@ NOME_FILE_CSV = "Brevo.csv"
 
 def download_csv():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(PATH_CARTELLA, 'credentials.json'), scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
     client = gspread.authorize(creds)
     
     # Apre il foglio usando l'ID (più sicuro)
