@@ -32,6 +32,11 @@ jobs:
       
       - name: Scarica CSV Brevo
         run: python scripts/download_csv.py
+        
+      - name: Debug - Trova CSV
+        run: |
+          echo "=== Cercando CSV ==="
+          find . -name "*.csv" -type f
       
       - name: Aggiungi utenti Scheda alla lista Brevo
         run: python scripts/aggiungi_a_lista_scheda.py
