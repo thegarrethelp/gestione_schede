@@ -146,6 +146,10 @@ def main():
     abbonamenti = pd.read_csv(FILE_ABBONAMENTI, sep=';', encoding='utf-8-sig')
     brevo = pd.read_csv(FILE_BREVO, encoding='utf-8')
     
+    print(f"📊 Colonne Brevo.csv: {list(brevo.columns)}")
+    print(f"📊 Prime 3 righe Brevo:")
+    print(brevo[['Nome', 'Cognome', 'Email']].head(3).to_string())
+    
     # Filtra abbonamenti con "Scheda"
     scheda_filter = abbonamenti['TipologiaAbbonamento'].str.contains('Scheda', case=False, na=False)
     abbonamenti_scheda = abbonamenti[scheda_filter]
@@ -169,6 +173,13 @@ def main():
             (brevo['Nome'].astype(str).str.strip().str.lower() == nome.lower()) & 
             (brevo['Cognome'].astype(str).str.strip().str.lower() == cognome.lower())
         ]
+        
+        if len(brevo_match) == 0:
+            # Prova anche invertendo nome e cognome (a volte sono scambiati)
+            brevo_match = brevo[
+                (brevo['Nome'].astype(str).str.strip().str.lower() == cognome.lower()) & 
+                (brevo['Cognome'].astype(str).str.strip().str.lower() == nome.lower())
+            ]
         
         if len(brevo_match) > 0:
             email = brevo_match.iloc[0]['Email']

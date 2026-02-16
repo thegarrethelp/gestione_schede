@@ -34,12 +34,9 @@ def main():
             '__RequestVerificationToken': token,
             'Input.RememberMe': 'false'
         }
-        # In .NET il login deve inviare i dati come form
         res_login = session.post(URL_LOGIN, data=payload_login, headers={'Referer': URL_LOGIN})
 
-        # Verifica se siamo ancora sulla pagina di login (segno di fallimento)
         if "Identity/Account/Login" in res_login.url and res_login.status_code == 200:
-            # Se la risposta contiene ancora il form di login, le credenziali o il token sono errati
             print("ERRORE: Login fallito. Controlla Username e Password.")
             return
 
@@ -48,11 +45,10 @@ def main():
         # 3. Download Dati
         print("3. Estrazione anagrafica completa...")
         
-        # Header specifici per la chiamata API JSON
         headers_api = {
             'Content-Type': 'application/json; charset=utf-8',
             'X-Requested-With': 'XMLHttpRequest',
-            'RequestVerificationToken': token, # Fondamentale per sistemi .NET
+            'RequestVerificationToken': token,
             'Referer': 'https://clubmanager-pro.com/Users/Users/UsersList'
         }
 
@@ -76,24 +72,45 @@ def main():
 
         response = session.post(URL_API_DATI, json=payload_api, headers=headers_api)
 
-        # Se il server ci ha rimandato al login, la risposta sarà HTML (inizia con <)
         if response.text.strip().startswith("<!DOCTYPE"):
             print("ERRORE: La sessione è scaduta o il server ha rifiutato l'accesso API.")
-            print("Il server ha restituito una pagina HTML invece dei dati JSON.")
             return
 
         json_data = response.json()
         
-        # Estrazione dati (gestiamo diverse possibili strutture del JSON)
+        # Estrazione dati
         data_list = json_data.get('data') or json_data.get('items') or json_data
         
         if data_list:
-            df = pd.DataFrame(data_list)
+            # Estrai i campi necessari dalla struttura annidata
+            utenti_estratti = []
+            
+            for utente in data_list:
+                # I dati sono dentro 'Anagrafica'
+                anagrafica = utente.get('Anagrafica', {})
+                
+                if anagrafica:
+                    nome = anagrafica.get('Nome', '')
+                    cognome = anagrafica.get('Cognome', '')
+                    email = utente.get('Email') or anagrafica.get('Email', '')
+                    cellulare = utente.get('Cellulare', '')
+                    codice_fiscale = anagrafica.get('CodiceFiscale', '')
+                    
+                    utenti_estratti.append({
+                        'Nome': nome,
+                        'Cognome': cognome,
+                        'Email': email,
+                        'Cellulare': cellulare,
+                        'CodiceFiscale': codice_fiscale
+                    })
+            
+            df = pd.DataFrame(utenti_estratti)
             output_path = os.path.join(PATH_CARTELLA, NOME_FILE_CSV)
             df.to_csv(output_path, index=False, encoding='utf-8')
             print(f"--- OPERAZIONE COMPLETATA ---")
             print(f"File salvato in: {output_path}")
             print(f"Righe esportate: {len(df)}")
+            print(f"Colonne: {list(df.columns)}")
         else:
             print("La risposta è arrivata ma non contiene dati.")
 
