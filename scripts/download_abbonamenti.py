@@ -4,7 +4,7 @@ import os
 from bs4 import BeautifulSoup
 
 # --- CONFIGURAZIONE ---
-PATH_CARTELLA = r"scripts"
+PATH_CARTELLA = r"..\scripts"
 NOME_FILE_CSV = "Lista_Abbonamenti_Totale.csv"
 URL_LOGIN = "https://clubmanager-pro.com/Identity/Account/Login"
 URL_PAGINA_RICERCA = "https://clubmanager-pro.com/Ricerche/Ricerche/searchsubscriptionslistSN"
