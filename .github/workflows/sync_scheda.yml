@@ -33,12 +33,13 @@ jobs:
       - name: Scarica CSV Brevo
         run: python scripts/download_utenti.py
         
-      - name: Debug - Contenuto cartella scripts
+      - name: Debug - Colonne CSV
         run: |
-          echo "=== Contenuto scripts/ ==="
-          ls -la scripts/
-          echo "=== Contenuto root ==="
-          ls -la
+          echo "=== Colonne Brevo.csv ==="
+          head -1 scripts/Brevo.csv
+          echo ""
+          echo "=== Prime 3 righe ==="
+          head -3 scripts/Brevo.csv
       
       - name: Aggiungi utenti Scheda alla lista Brevo
         run: python scripts/aggiungi_a_lista_scheda.py
