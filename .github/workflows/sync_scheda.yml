@@ -26,6 +26,13 @@ jobs:
         
       - name: Setup Google credentials
         run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > scripts/credentials.json
+        
+      - name: Debug - Verifica file
+        run: |
+          echo "=== Contenuto cartella scripts ==="
+          ls -la scripts/
+          echo "=== Verifica credentials.json ==="
+          cat scripts/credentials.json | head -5
       
       - name: Scarica CSV Abbonamenti
         run: python scripts/download_abbonamenti.py
