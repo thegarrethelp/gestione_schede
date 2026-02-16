@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 # Configurazione
-PATH_CARTELLA = r"..\scripts"
+PATH_CARTELLA = r"scripts/"
 ID_FOGLIO = "1L7PbJSD_nz2lwyK56HLaiRV5BIFn3jThGMNSvDWdiPQ" 
 NOME_FILE_CSV = "Brevo.csv"
 
